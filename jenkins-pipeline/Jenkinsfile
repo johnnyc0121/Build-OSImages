@@ -1,0 +1,120 @@
+pipeline {
+    agent any
+    
+    environment {
+        AZURE_SUBSCRIPTION_ID = credentials('azure-subscription-id')
+        AZURE_CLIENT_ID = credentials('azure-client-id')
+        AZURE_CLIENT_SECRET = credentials('azure-client-secret')
+        AZURE_TENANT_ID = credentials('azure-tenant-id')
+        PACKER_IMAGE = 'custom-packer:latest'
+        RESOURCE_GROUP = 'rg-custom-images'
+        LOCATION = 'eastus'
+    }
+    
+    parameters {
+        string(name: 'IMAGE_NAME', defaultValue: 'windows-server-2022-custom', description: 'Name for the custom image')
+        choice(name: 'VM_SIZE', choices: ['Standard_D4s_v3', 'Standard_D8s_v3', 'Standard_D16s_v3'], description: 'Azure VM size for build')
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                echo 'Checking out source code...'
+                checkout scm
+            }
+        }
+        
+        stage('Build Packer Docker Image') {
+            steps {
+                script {
+                    echo 'Building Packer Docker image...'
+                    sh '''
+                        cd packer
+                        docker build -t ${PACKER_IMAGE} .
+                    '''
+                }
+            }
+        }
+        
+        stage('Validate Packer Template') {
+            steps {
+                script {
+                    echo 'Validating Packer template...'
+                    sh '''
+                        docker run --rm \
+                            -v $(pwd)/packer:/workspace \
+                            -e AZURE_SUBSCRIPTION_ID=${AZURE_SUBSCRIPTION_ID} \
+                            -e AZURE_CLIENT_ID=${AZURE_CLIENT_ID} \
+                            -e AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET} \
+                            -e AZURE_TENANT_ID=${AZURE_TENANT_ID} \
+                            ${PACKER_IMAGE} \
+                            validate \
+                            -var="resource_group=${RESOURCE_GROUP}" \
+                            -var="location=${LOCATION}" \
+                            -var="image_name=${IMAGE_NAME}" \
+                            -var="vm_size=${VM_SIZE}" \
+                            windows-server-2022.pkr.hcl
+                    '''
+                }
+            }
+        }
+        
+        stage('Build Azure Image') {
+            steps {
+                script {
+                    echo 'Building custom Windows Server image in Azure...'
+                    sh '''
+                        docker run --rm \
+                            -v $(pwd)/packer:/workspace \
+                            -e AZURE_SUBSCRIPTION_ID=${AZURE_SUBSCRIPTION_ID} \
+                            -e AZURE_CLIENT_ID=${AZURE_CLIENT_ID} \
+                            -e AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET} \
+                            -e AZURE_TENANT_ID=${AZURE_TENANT_ID} \
+                            -e PACKER_LOG=1 \
+                            ${PACKER_IMAGE} \
+                            build \
+                            -force \
+                            -var="resource_group=${RESOURCE_GROUP}" \
+                            -var="location=${LOCATION}" \
+                            -var="image_name=${IMAGE_NAME}" \
+                            -var="vm_size=${VM_SIZE}" \
+                            windows-server-2022.pkr.hcl
+                    '''
+                }
+            }
+        }
+        
+        stage('Tag Image') {
+            steps {
+                script {
+                    echo 'Tagging image in Azure...'
+                    sh '''
+                        # Get the latest image name
+                        IMAGE_FULL_NAME=$(docker run --rm \
+                            -e AZURE_SUBSCRIPTION_ID=${AZURE_SUBSCRIPTION_ID} \
+                            -e AZURE_CLIENT_ID=${AZURE_CLIENT_ID} \
+                            -e AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET} \
+                            -e AZURE_TENANT_ID=${AZURE_TENANT_ID} \
+                            ${PACKER_IMAGE} \
+                            /bin/sh -c "az login --service-principal -u ${AZURE_CLIENT_ID} -p ${AZURE_CLIENT_SECRET} --tenant ${AZURE_TENANT_ID} && \
+                            az image list --resource-group ${RESOURCE_GROUP} --query '[0].name' -o tsv")
+                        
+                        echo "Created image: ${IMAGE_FULL_NAME}"
+                    '''
+                }
+            }
+        }
+    }
+    
+    post {
+        success {
+            echo 'Pipeline completed successfully! Custom Windows Server image has been created in Azure.'
+        }
+        failure {
+            echo 'Pipeline failed. Check logs for details.'
+        }
+        always {
+            cleanWs()
+        }
+    }
+}
