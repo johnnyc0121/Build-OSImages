@@ -8,7 +8,7 @@ services:
     
     environment:
       # Jenkins master connection details
-      - JENKINS_URL=http://your-jenkins-master-ip:8080
+      - JENKINS_URL=http://10.121.0.4:8080
       - JENKINS_AGENT_NAME=docker-agent-01
       - JENKINS_SECRET=
       - JENKINS_AGENT_WORKDIR=/home/jenkins/agent
