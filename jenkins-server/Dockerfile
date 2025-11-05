@@ -35,7 +35,9 @@ USER jenkins
 
 # Install Jenkins plugins
 RUN jenkins-plugin-cli --plugins \
+    docker-plugin \
     docker-workflow \
     pipeline-stage-view \
     credentials-binding \
+    windows-cloud \
     git
