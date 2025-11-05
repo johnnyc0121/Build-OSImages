@@ -13,10 +13,18 @@ services:
     volumes:
       - jenkins_home:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - jenkins-network
     environment:
       - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
     restart: unless-stopped
 
 volumes:
   jenkins_home:
+    name: jenkins_home  # ← Forces exact name (no prefix)
     driver: local
+
+networks:
+  jenkins-network:
+    name: jenkins-network  # ← Forces exact name (no prefix)
+    driver: bridge
