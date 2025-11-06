@@ -40,4 +40,5 @@ RUN jenkins-plugin-cli --plugins \
     pipeline-stage-view \
     credentials-binding \
     windows-cloud \
+    blueocean \
     git
