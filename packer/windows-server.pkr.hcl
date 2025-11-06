@@ -52,7 +52,7 @@ variable "vm_size" {
   default = "Standard_D4s_v3"
 }
 
-source "azure-arm" "windows_2022" {
+source "azure-arm" "windows_server" {
   subscription_id                   = var.azure_subscription_id
   client_id                         = var.azure_client_id
   client_secret                     = var.azure_client_secret
