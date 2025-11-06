@@ -28,7 +28,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Install Ansible
-RUN pip3 install --no-cache-dir ansible ansible-core paramiko
+RUN pip3 install --no-cache-dir --break-system-packages ansible ansible-core paramiko
 
 # Install Packer (optional - if agent will run Packer directly)
 RUN PACKER_VERSION=1.14.2 && \
