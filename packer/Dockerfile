@@ -2,11 +2,12 @@ FROM hashicorp/packer:latest
 
 USER root
 
-# Install Azure CLI
-RUN apk add --no-cache python3 py3-pip bash curl && \
+# Install build dependencies and Azure CLI
+RUN apk add --no-cache python3 py3-pip bash curl gcc python3-dev musl-dev linux-headers && \
     rm -f /usr/lib/python*/EXTERNALLY-MANAGED && \
     pip3 install --upgrade pip && \
-    pip3 install azure-cli
+    pip3 install azure-cli && \
+    apk del gcc python3-dev musl-dev linux-headers
 
 # Install PowerShell (for running scripts)
 RUN apk add --no-cache \
