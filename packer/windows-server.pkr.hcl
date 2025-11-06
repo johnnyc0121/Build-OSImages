@@ -57,7 +57,8 @@ source "azure-arm" "windows_server" {
   client_id                         = var.azure_client_id
   client_secret                     = var.azure_client_secret
   tenant_id                         = var.azure_tenant_id
-  
+
+  build_resource_group_name         = "packer-images-rg"
   managed_image_resource_group_name = var.resource_group
   managed_image_name                = "${var.image_name}-${formatdate("YYYY-MM-DD-hhmm", timestamp())}"
   
@@ -67,13 +68,12 @@ source "azure-arm" "windows_server" {
   image_sku                         = "2022-datacenter-azure-edition"
   image_version                     = "latest"
   
-  location                          = var.location
   vm_size                           = var.vm_size
   
   communicator                      = "winrm"
   winrm_use_ssl                     = true
   winrm_insecure                    = true
-  winrm_timeout                     = "5m"
+  winrm_timeout                     = "30m"
   winrm_username                    = "packer"
   
   azure_tags = {
