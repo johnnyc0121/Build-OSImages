@@ -12,7 +12,7 @@ pipeline {
     }
     
     parameters {
-        string(name: 'OS_NAME', choices: ['win2025', 'win2022', 'win2019'], description: 'OS Version for the custom image')
+        choice(name: 'OS_NAME', choices: ['win2025', 'win2022', 'win2019'], description: 'OS Version for the custom image')
         choice(name: 'VM_SIZE', choices: ['Standard_D2ads_v6', 'Standard_D2as_v6'], description: 'Azure VM size for build')
     }
     
