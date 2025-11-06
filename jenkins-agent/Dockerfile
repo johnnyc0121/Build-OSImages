@@ -24,12 +24,11 @@ RUN apt-get update && \
     python3 \
     python3-pip \
     jq && \
-    sshpass && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
 # Install Ansible
-RUN pip3 install --no-cache-dir ansible ansible-core
+RUN pip3 install --no-cache-dir ansible ansible-core paramiko
 
 # Install Packer (optional - if agent will run Packer directly)
 RUN PACKER_VERSION=1.14.2 && \
