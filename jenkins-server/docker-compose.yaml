@@ -17,6 +17,7 @@ services:
       - jenkins-network
     environment:
       - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
+      - DOCKER_HOST=unix:///var/run/docker.sock
     restart: unless-stopped
 
 volumes:
