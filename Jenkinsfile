@@ -139,16 +139,22 @@ pipeline {
             }
         }
     }
-    
     post {
         success {
-            echo 'Pipeline completed successfully! Custom Windows Server image has been created in Azure.'
+            node {
+                echo 'Pipeline completed successfully! Custom Windows Server image has been created in Azure.'
+            }
         }
         failure {
-            echo 'Pipeline failed. Check logs for details.'
+            node {
+                echo 'Pipeline failed. Check logs for details.'
+            }
         }
         always {
-            cleanWs()
+            node {
+                cleanWs()
+            }
         }
     }
+
 }
