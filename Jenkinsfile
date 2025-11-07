@@ -24,7 +24,7 @@ pipeline {
         stage('Checkout from GitHub') {
             agent {
                 docker {
-                    image 'jenkins-agent:latest'
+                    image 'jenkins-agent:20251107'
                     customWorkspace '${CUSTOM_WORKSPACE}'
                 }
             }
@@ -40,7 +40,7 @@ pipeline {
         stage('Verify GitHub Checkout') {
             agent {
                 docker {
-                    image 'jenkins-agent:latest'
+                    image 'jenkins-agent:20251107'
                     customWorkspace '${CUSTOM_WORKSPACE}'
                 }
             }
