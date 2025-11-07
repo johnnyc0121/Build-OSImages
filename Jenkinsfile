@@ -64,6 +64,8 @@ pipeline {
                 script {
                     echo 'Validating Packer template...'
                     sh '''
+                        pwd
+                        ls -la
                         packer validate \
                             -var="AZURE_SUBSCRIPTION_ID=${AZURE_SUBSCRIPTION_ID}" \
                             -var="AZURE_CLIENT_ID=${AZURE_CLIENT_ID}" \
