@@ -56,7 +56,7 @@ pipeline {
                             -var="image_name=${OS_NAME}-100000" \
                             -var="os_name=${OS_NAME}" \
                             -var="vm_size=${VM_SIZE}" \
-                            windows-server.pkr.hcl
+                            packer/windows-server.pkr.hcl
                     '''
                 }
             }
@@ -82,7 +82,7 @@ pipeline {
                             -var="image_name=${OS_NAME}-100000" \
                             -var="os_name=${OS_NAME}" \
                             -var="vm_size=${VM_SIZE}" \
-                            windows-server.pkr.hcl
+                            packer/windows-server.pkr.hcl
                     '''
                 }
             }
