@@ -22,6 +22,12 @@ pipeline {
     
     stages {
         stage('Checkout from GitHub') {
+            agent {
+                docker {
+                    image 'custom-packer:latest'
+                    customWorkspace '${CUSTOM_WORKSPACE}'
+                }
+            }
             steps {
                 // Optional: clean workspace before checkout
                 deleteDir()
@@ -32,6 +38,12 @@ pipeline {
         }
 
         stage('Verify GitHub Checkout') {
+            agent {
+                docker {
+                    image 'custom-packer:latest'
+                    customWorkspace '${CUSTOM_WORKSPACE}'
+                }
+            }
             steps {
                 echo "Checked out code from ${env.GIT_REPO} on branch ${env.GIT_BRANCH}"
                 sh 'ls -la' // List files in workspace
