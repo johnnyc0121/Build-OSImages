@@ -73,7 +73,7 @@ pipeline {
         stage('Validate Packer Template') {
             agent {
                 docker {
-                    image 'custom-packer:latest'
+                    image 'jenkins-agent:20251107'
                     args "--network host -v /host/workspaces/osimages-${env.RANDOM_ID}:/var/jenkins_home/workspace/osimages-${env.RANDOM_ID}"
                     customWorkspace "/var/jenkins_home/workspace/osimages-${env.RANDOM_ID}"
                 }
@@ -103,7 +103,7 @@ pipeline {
         stage('Build Azure Image') {
             agent {
                 docker {
-                    image 'custom-packer:latest'
+                    image 'jenkins-agent:20251107'
                     args "--network host -v /host/workspaces/osimages-${env.RANDOM_ID}:/var/jenkins_home/workspace/osimages-${env.RANDOM_ID}"
                     customWorkspace "/var/jenkins_home/workspace/osimages-${env.RANDOM_ID}"
                 }

@@ -37,6 +37,15 @@ RUN PACKER_VERSION=1.14.2 && \
     mv packer /usr/local/bin/ && \
     rm packer_${PACKER_VERSION}_linux_amd64.zip
 
+# Install PowerShell
+RUN wget https://packages.microsoft.com/config/debian/11/packages-microsoft-prod.deb && \
+    dpkg -i packages-microsoft-prod.deb && \
+    apt-get update && \
+    apt-get install -y powershell && \
+    rm packages-microsoft-prod.deb && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 # Add jenkins user to docker group (will use host docker socket)
 RUN groupadd -g 999 docker || true && \
     usermod -aG docker jenkins
