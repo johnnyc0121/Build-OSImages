@@ -41,10 +41,8 @@ pipeline {
                 script {
                     echo 'Validating Packer template...'
                     sh '''
-                        pwd
-                        ls -la
                         docker run --rm \
-                            -v $(pwd)/packer:/workspace \
+                            -v ${WORKSPACE}/packer:/workspace \
                             -e AZURE_SUBSCRIPTION_ID=${AZURE_SUBSCRIPTION_ID} \
                             -e AZURE_CLIENT_ID=${AZURE_CLIENT_ID} \
                             -e AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET} \
@@ -56,7 +54,7 @@ pipeline {
                             -var="image_name=${OS_NAME}-100000" \
                             -var="os_name=${OS_NAME}" \
                             -var="vm_size=${VM_SIZE}" \
-                            /workspace/windows-server.pkr.hcl
+                            windows-server.pkr.hcl
                     '''
                 }
             }
@@ -65,10 +63,10 @@ pipeline {
         stage('Build Azure Image') {
             steps {
                 script {
-                    echo 'Building custom Windows Server image in Azure ...'
+                    echo 'Building custom Windows Server image in Azure...'
                     sh '''
                         docker run --rm \
-                            -v $(pwd)/packer:/workspace \
+                            -v ${WORKSPACE}/packer:/workspace \
                             -e AZURE_SUBSCRIPTION_ID=${AZURE_SUBSCRIPTION_ID} \
                             -e AZURE_CLIENT_ID=${AZURE_CLIENT_ID} \
                             -e AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET} \
@@ -82,7 +80,7 @@ pipeline {
                             -var="image_name=${OS_NAME}-100000" \
                             -var="os_name=${OS_NAME}" \
                             -var="vm_size=${VM_SIZE}" \
-                            /workspace/windows-server.pkr.hcl
+                            windows-server.pkr.hcl
                     '''
                 }
             }
