@@ -141,17 +141,17 @@ pipeline {
     }
     post {
         success {
-            node {
+            node('jenkins-agent') {
                 echo 'Pipeline completed successfully! Custom Windows Server image has been created in Azure.'
             }
         }
         failure {
-            node {
+            node('jenkins-agent') {
                 echo 'Pipeline failed. Check logs for details.'
             }
         }
         always {
-            node {
+            node('jenkins-agent') {
                 cleanWs()
             }
         }
