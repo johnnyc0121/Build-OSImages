@@ -51,7 +51,10 @@ pipeline {
             }
             steps {
                 echo "Checked out code from ${env.GIT_REPO} on branch ${env.GIT_BRANCH}"
-                sh 'ls -la' // List files in workspace
+                sh '''
+                    pwd
+                    ls -la
+               ''' // List files in workspace
             }
         }
 
