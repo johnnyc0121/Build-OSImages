@@ -9,6 +9,7 @@ pipeline {
         PACKER_IMAGE = 'custom-packer:latest'
         RESOURCE_GROUP = 'osimages-automation'
         LOCATION = 'westus2'
+        RANDOM_ID = "${UUID.randomUUID().toString().take(8)}"
     }
     
     parameters {
@@ -52,18 +53,22 @@ pipeline {
         }
         
         stage('Validate Packer Template') {
+            agent {
+                docker {
+                    image 'custom-packer:latest'
+                    args '-v ${WORKSPACE}/packer:/workspace'
+                    customWorkspace '/home/jenkins/workspace-${RANDOM_ID}'
+                }
+            }
             steps {
                 script {
                     echo 'Validating Packer template...'
                     sh '''
-                        docker run --rm \
-                            -v ${WORKSPACE}/packer:/workspace \
-                            -e AZURE_SUBSCRIPTION_ID=${AZURE_SUBSCRIPTION_ID} \
-                            -e AZURE_CLIENT_ID=${AZURE_CLIENT_ID} \
-                            -e AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET} \
-                            -e AZURE_TENANT_ID=${AZURE_TENANT_ID} \
-                            ${PACKER_IMAGE} \
-                            validate \
+                        packer validate \
+                            -var="AZURE_SUBSCRIPTION_ID=${AZURE_SUBSCRIPTION_ID}" \
+                            -var="AZURE_CLIENT_ID=${AZURE_CLIENT_ID}" \
+                            -var="AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET}" \
+                            -var="AZURE_TENANT_ID=${AZURE_TENANT_ID}" \
                             -var="resource_group=${RESOURCE_GROUP}" \
                             -var="location=${LOCATION}" \
                             -var="image_name=${OS_NAME}-100000" \
