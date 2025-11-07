@@ -41,4 +41,5 @@ RUN jenkins-plugin-cli --plugins \
     credentials-binding \
     windows-cloud \
     blueocean \
+    ws-cleanup \
     git
