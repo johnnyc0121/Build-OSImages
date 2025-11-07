@@ -41,6 +41,8 @@ pipeline {
                 script {
                     echo 'Validating Packer template...'
                     sh '''
+                        pwd
+                        ls -la
                         docker run --rm \
                             -v $(pwd)/packer:/workspace \
                             -e AZURE_SUBSCRIPTION_ID=${AZURE_SUBSCRIPTION_ID} \
@@ -54,7 +56,7 @@ pipeline {
                             -var="image_name=${OS_NAME}-100000" \
                             -var="os_name=${OS_NAME}" \
                             -var="vm_size=${VM_SIZE}" \
-                            packer/windows-server.pkr.hcl
+                            windows-server.pkr.hcl
                     '''
                 }
             }
@@ -80,7 +82,7 @@ pipeline {
                             -var="image_name=${OS_NAME}-100000" \
                             -var="os_name=${OS_NAME}" \
                             -var="vm_size=${VM_SIZE}" \
-                            packer/windows-server.pkr.hcl
+                            windows-server.pkr.hcl
                     '''
                 }
             }
