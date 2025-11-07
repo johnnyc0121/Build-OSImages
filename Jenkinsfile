@@ -1,15 +1,18 @@
 pipeline {
-    agent any
+    agent none
     
     environment {
+        RANDOM_ID = "${UUID.randomUUID().toString().take(8)}"
+        CUSTOM_WORKSPACE = "/var/jenkins_home/workspace/osimages-${RANDOM_ID}"
         AZURE_SUBSCRIPTION_ID = credentials('azure-subscription-id')
         AZURE_CLIENT_ID = credentials('azure-client-id')
         AZURE_CLIENT_SECRET = credentials('azure-client-secret')
         AZURE_TENANT_ID = credentials('azure-tenant-id')
-        PACKER_IMAGE = 'custom-packer:latest'
         RESOURCE_GROUP = 'osimages-automation'
         LOCATION = 'westus2'
-        RANDOM_ID = "${UUID.randomUUID().toString().take(8)}"
+        PACKER_IMAGE = 'custom-packer:latest'
+        GIT_REPO = 'https://github.com/johnnyc0121/Build-OSImages.git'
+        GIT_BRANCH = 'main'
     }
     
     parameters {
@@ -18,46 +21,40 @@ pipeline {
     }
     
     stages {
-        stage('Checkout') {
+        stage('Checkout from GitHub') {
             steps {
-                echo 'Checking out source code...'
-                checkout scm
+                // Optional: clean workspace before checkout
+                deleteDir()
+
+                // Clone the GitHub repository into the workspace
+                git branch: "${env.GIT_BRANCH}", url: "${env.GIT_REPO}", credentialsId: 'github-creds'
             }
         }
 
-        stage('Debug - List Files') {
+        stage('Verify GitHub Checkout') {
             steps {
-                sh '''
-                    echo "=== Workspace contents ==="
-                    ls -la ${WORKSPACE}
-                    
-                    echo "=== Packer directory contents ==="
-                    ls -la ${WORKSPACE}/packer || echo "packer directory not found"
-                    
-                    echo "=== Looking for HCL files ==="
-                    find ${WORKSPACE} -name "*.hcl" || echo "no HCL files found"
-                '''
+                echo "Checked out code from ${env.GIT_REPO} on branch ${env.GIT_BRANCH}"
+                sh 'ls -la' // List files in workspace
             }
         }
 
-        stage('Build Packer Docker Image') {
-            steps {
-                script {
-                    echo 'Building Packer Docker image...'
-                    sh '''
-                        cd packer
-                        docker build -t ${PACKER_IMAGE} .
-                    '''
-                }
-            }
-        }
+        // stage('Build Packer Docker Image') {
+        //     steps {
+        //         script {
+        //             echo 'Building Packer Docker image...'
+        //             sh '''
+        //                 cd packer
+        //                 docker build -t ${PACKER_IMAGE} .
+        //             '''
+        //         }
+        //     }
+        // }
         
         stage('Validate Packer Template') {
             agent {
                 docker {
                     image 'custom-packer:latest'
-                    args '-v ${WORKSPACE}/packer:/workspace'
-                    customWorkspace '/home/jenkins/workspace-${RANDOM_ID}'
+                    customWorkspace '${CUSTOM_WORKSPACE}'
                 }
             }
             steps {
@@ -76,33 +73,34 @@ pipeline {
                             -var="image_name=${OS_NAME}-100000" \
                             -var="os_name=${OS_NAME}" \
                             -var="vm_size=${VM_SIZE}" \
-                            /workspace/windows-server.pkr.hcl
+                            /Build-OSImages/packer/windows-server.pkr.hcl
                     '''
                 }
             }
         }
         
         stage('Build Azure Image') {
+            agent {
+                docker {
+                    image 'custom-packer:latest'
+                    customWorkspace '${CUSTOM_WORKSPACE}'
+                }
+            }
             steps {
                 script {
                     echo 'Building custom Windows Server image in Azure...'
                     sh '''
-                        docker run --rm \
-                            -v ${WORKSPACE}/packer:/workspace \
-                            -e AZURE_SUBSCRIPTION_ID=${AZURE_SUBSCRIPTION_ID} \
-                            -e AZURE_CLIENT_ID=${AZURE_CLIENT_ID} \
-                            -e AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET} \
-                            -e AZURE_TENANT_ID=${AZURE_TENANT_ID} \
-                            -e PACKER_LOG=1 \
-                            ${PACKER_IMAGE} \
-                            build \
-                            -force \
+                        packer build \
+                            -var="AZURE_SUBSCRIPTION_ID=${AZURE_SUBSCRIPTION_ID}" \
+                            -var="AZURE_CLIENT_ID=${AZURE_CLIENT_ID}" \
+                            -var="AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET}" \
+                            -var="AZURE_TENANT_ID=${AZURE_TENANT_ID}" \
                             -var="resource_group=${RESOURCE_GROUP}" \
                             -var="location=${LOCATION}" \
                             -var="image_name=${OS_NAME}-100000" \
                             -var="os_name=${OS_NAME}" \
                             -var="vm_size=${VM_SIZE}" \
-                            /workspace/windows-server.pkr.hcl
+                            /Build-OSImages/packer/windows-server.pkr.hcl
                     '''
                 }
             }
