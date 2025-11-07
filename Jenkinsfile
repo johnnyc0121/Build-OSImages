@@ -23,7 +23,22 @@ pipeline {
                 checkout scm
             }
         }
-        
+
+        stage('Debug - List Files') {
+            steps {
+                sh '''
+                    echo "=== Workspace contents ==="
+                    ls -la ${WORKSPACE}
+                    
+                    echo "=== Packer directory contents ==="
+                    ls -la ${WORKSPACE}/packer || echo "packer directory not found"
+                    
+                    echo "=== Looking for HCL files ==="
+                    find ${WORKSPACE} -name "*.hcl" || echo "no HCL files found"
+                '''
+            }
+        }
+
         stage('Build Packer Docker Image') {
             steps {
                 script {
