@@ -11,8 +11,6 @@ pipeline {
         RESOURCE_GROUP = 'osimages-automation'
         LOCATION = 'westus2'
         PACKER_IMAGE = 'custom-packer:latest'
-        GIT_REPO = 'https://github.com/johnnyc0121/Build-OSImages.git'
-        GIT_BRANCH = 'main'
     }
     
     parameters {
@@ -25,9 +23,15 @@ pipeline {
             agent {
                 docker {
                     image 'jenkins-agent:20251107'
+                    args '--network host'
                     customWorkspace '${CUSTOM_WORKSPACE}'
                 }
             }
+            environment {
+                GIT_REPO = 'https://github.com/johnnyc0121/Build-OSImages.git'
+                GIT_BRANCH = 'main'
+            }
+
             steps {
                 // Optional: clean workspace before checkout
                 deleteDir()
@@ -41,6 +45,7 @@ pipeline {
             agent {
                 docker {
                     image 'jenkins-agent:20251107'
+                    args '--network host'
                     customWorkspace '${CUSTOM_WORKSPACE}'
                 }
             }
@@ -66,6 +71,7 @@ pipeline {
             agent {
                 docker {
                     image 'custom-packer:latest'
+                    args '--network host'
                     customWorkspace '${CUSTOM_WORKSPACE}'
                 }
             }
@@ -95,6 +101,7 @@ pipeline {
             agent {
                 docker {
                     image 'custom-packer:latest'
+                    args '--network host'
                     customWorkspace '${CUSTOM_WORKSPACE}'
                 }
             }
