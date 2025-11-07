@@ -3,7 +3,6 @@ pipeline {
     
     environment {
         RANDOM_ID = "${UUID.randomUUID().toString().take(8)}"
-        CUSTOM_WORKSPACE = "/var/jenkins_home/workspace/osimages-${RANDOM_ID}"
         AZURE_SUBSCRIPTION_ID = credentials('azure-subscription-id')
         AZURE_CLIENT_ID = credentials('azure-client-id')
         AZURE_CLIENT_SECRET = credentials('azure-client-secret')
@@ -24,7 +23,7 @@ pipeline {
                 docker {
                     image 'jenkins-agent:20251107'
                     args '--network host'
-                    customWorkspace '${CUSTOM_WORKSPACE}'
+                    customWorkspace '/var/jenkins_home/workspace/osimages-${RANDOM_ID}'
                 }
             }
             environment {
@@ -46,7 +45,7 @@ pipeline {
                 docker {
                     image 'jenkins-agent:20251107'
                     args '--network host'
-                    customWorkspace '${CUSTOM_WORKSPACE}'
+                    customWorkspace '/var/jenkins_home/workspace/osimages-${RANDOM_ID}'
                 }
             }
             steps {
@@ -75,7 +74,7 @@ pipeline {
                 docker {
                     image 'custom-packer:latest'
                     args '--network host'
-                    customWorkspace '${CUSTOM_WORKSPACE}'
+                    customWorkspace '/var/jenkins_home/workspace/osimages-${RANDOM_ID}'
                 }
             }
             steps {
@@ -105,7 +104,7 @@ pipeline {
                 docker {
                     image 'custom-packer:latest'
                     args '--network host'
-                    customWorkspace '${CUSTOM_WORKSPACE}'
+                    customWorkspace '/var/jenkins_home/workspace/osimages-${RANDOM_ID}'
                 }
             }
             steps {
