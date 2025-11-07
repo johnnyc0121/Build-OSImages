@@ -22,8 +22,8 @@ pipeline {
             agent {
                 docker {
                     image 'jenkins-agent:20251107'
-                    args '--network host'
-                    customWorkspace '/var/jenkins_home/workspace/osimages-${RANDOM_ID}'
+                    args "--network host -v /host/workspaces/osimages-${env.RANDOM_ID}:/var/jenkins_home/workspace/osimages-${env.RANDOM_ID}"
+                    customWorkspace "/var/jenkins_home/workspace/osimages-${env.RANDOM_ID}"
                 }
             }
             environment {
@@ -32,20 +32,21 @@ pipeline {
             }
 
             steps {
-                // Optional: clean workspace before checkout
-                deleteDir()
-
+                sh '''
+                    pwd
+                    ls -la
+                '''
                 // Clone the GitHub repository into the workspace
                 git branch: "${env.GIT_BRANCH}", url: "${env.GIT_REPO}", credentialsId: 'github-creds'
             }
-        }
+        } // stage
 
         stage('Verify GitHub Checkout') {
             agent {
                 docker {
                     image 'jenkins-agent:20251107'
-                    args '--network host'
-                    customWorkspace '/var/jenkins_home/workspace/osimages-${RANDOM_ID}'
+                    args "--network host -v /host/workspaces/osimages-${env.RANDOM_ID}:/var/jenkins_home/workspace/osimages-${env.RANDOM_ID}"
+                    customWorkspace "/var/jenkins_home/workspace/osimages-${env.RANDOM_ID}"
                 }
             }
             steps {
@@ -73,8 +74,8 @@ pipeline {
             agent {
                 docker {
                     image 'custom-packer:latest'
-                    args '--network host'
-                    customWorkspace '/var/jenkins_home/workspace/osimages-${RANDOM_ID}'
+                    args "--network host -v /host/workspaces/osimages-${env.RANDOM_ID}:/var/jenkins_home/workspace/osimages-${env.RANDOM_ID}"
+                    customWorkspace "/var/jenkins_home/workspace/osimages-${env.RANDOM_ID}"
                 }
             }
             steps {
@@ -103,8 +104,8 @@ pipeline {
             agent {
                 docker {
                     image 'custom-packer:latest'
-                    args '--network host'
-                    customWorkspace '/var/jenkins_home/workspace/osimages-${RANDOM_ID}'
+                    args "--network host -v /host/workspaces/osimages-${env.RANDOM_ID}:/var/jenkins_home/workspace/osimages-${env.RANDOM_ID}"
+                    customWorkspace "/var/jenkins_home/workspace/osimages-${env.RANDOM_ID}"
                 }
             }
             steps {
