@@ -31,6 +31,12 @@ RUN apt-get update && \
 # Install Azure CLI
 RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
+# Update Jenkins user ID
+RUN usermod --uid 2000 jenkins && \
+    groupmod --gid 2000 jenkins && \
+    chown -R jenkins:jenkins "$JENKINS_HOME" /usr/share/jenkins/ref
+
+# Switch back to Jenkins user
 USER jenkins
 
 # Install Jenkins plugins
