@@ -20,25 +20,27 @@ pipeline {
     stages {
         stage('Checkout from GitHub') {
             agent {
-                docker {
-                    image 'jenkins-agent:20251110'
-                    args "--network host -v /host/workspaces/osimages-${env.RANDOM_ID}:/var/jenkins_home/workspace/osimages-${env.RANDOM_ID}"
-                    customWorkspace "/var/jenkins_home/workspace/osimages-${env.RANDOM_ID}"
-                }
-            }
+                label 'jenkins-agent'
+            } // agent
             environment {
                 GIT_REPO = 'https://github.com/johnnyc0121/Build-OSImages.git'
                 GIT_BRANCH = 'main'
-            }
+            } // environment
 
             steps {
+                // Clean workspace first
+                deleteDir()
+
                 sh '''
                     pwd
                     ls -la
                 '''
-                // Clone the GitHub repository into the workspace
-                git branch: "${env.GIT_BRANCH}", url: "${env.GIT_REPO}", credentialsId: 'github-creds'
-            }
+
+                // Clone the GitHub repository
+                git branch: "${env.GIT_BRANCH}", 
+                    url: "${env.GIT_REPO}", 
+                    credentialsId: 'github-creds'
+            } // steps
         } // stage
 
         stage('Verify GitHub Checkout') {
