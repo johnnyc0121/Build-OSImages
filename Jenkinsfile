@@ -21,7 +21,7 @@ pipeline {
         stage('Checkout from GitHub') {
             agent {
                 docker {
-                    image 'jenkins-agent:20251107'
+                    image 'jenkins-agent:20251110'
                     args "--network host -v /host/workspaces/osimages-${env.RANDOM_ID}:/var/jenkins_home/workspace/osimages-${env.RANDOM_ID}"
                     customWorkspace "/var/jenkins_home/workspace/osimages-${env.RANDOM_ID}"
                 }
@@ -44,7 +44,7 @@ pipeline {
         stage('Verify GitHub Checkout') {
             agent {
                 docker {
-                    image 'jenkins-agent:20251107'
+                    image 'jenkins-agent:20251110'
                     args "--network host -v /host/workspaces/osimages-${env.RANDOM_ID}:/var/jenkins_home/workspace/osimages-${env.RANDOM_ID}"
                     customWorkspace "/var/jenkins_home/workspace/osimages-${env.RANDOM_ID}"
                 }
@@ -73,7 +73,7 @@ pipeline {
         stage('Validate Packer Template') {
             agent {
                 docker {
-                    image 'jenkins-agent:20251107'
+                    image 'jenkins-agent:20251110'
                     args "--network host -v /host/workspaces/osimages-${env.RANDOM_ID}:/var/jenkins_home/workspace/osimages-${env.RANDOM_ID}"
                     customWorkspace "/var/jenkins_home/workspace/osimages-${env.RANDOM_ID}"
                 }
@@ -103,7 +103,7 @@ pipeline {
         stage('Build Azure Image') {
             agent {
                 docker {
-                    image 'jenkins-agent:20251107'
+                    image 'jenkins-agent:20251110'
                     args "--network host -v /host/workspaces/osimages-${env.RANDOM_ID}:/var/jenkins_home/workspace/osimages-${env.RANDOM_ID}"
                     customWorkspace "/var/jenkins_home/workspace/osimages-${env.RANDOM_ID}"
                 }
