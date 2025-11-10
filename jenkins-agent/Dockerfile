@@ -48,6 +48,11 @@ RUN wget https://github.com/PowerShell/PowerShell/releases/download/v7.5.4/power
 RUN groupadd -g 999 docker || true && \
     usermod -aG docker jenkins
 
+# Update Jenkins user ID
+RUN usermod --uid 2000 jenkins && \
+    groupmod --gid 2000 jenkins && \
+    chown -R jenkins:jenkins "$JENKINS_HOME" /usr/share/jenkins/ref
+
 USER jenkins
 
 WORKDIR /home/jenkins
