@@ -50,8 +50,7 @@ RUN groupadd -g 999 docker || true && \
 
 # Update Jenkins user ID
 RUN usermod --uid 2000 jenkins && \
-    groupmod --gid 2000 jenkins && \
-    chown -R jenkins:jenkins "$JENKINS_HOME" /usr/share/jenkins/ref
+    groupmod --gid 2000 jenkins
 
 USER jenkins
 
