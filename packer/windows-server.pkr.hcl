@@ -32,6 +32,16 @@ variable "azure_tenant_id" {
   default = env("AZURE_TENANT_ID")
 }
 
+variable "build_resource_group_name" {
+  type    = string
+  default = env("BUILD_RESOURCE_GROUP_NAME")
+}
+
+variable "image_name" {
+  type    = string
+  default = env("IMAGE_NAME")
+}
+
 variable "image_sku" {
   type    = string
   default = env("IMAGE_SKU")
@@ -42,24 +52,19 @@ variable "image_version" {
   default = env("IMAGE_VERSION")
 }
 
+variable "location" {
+  type    = string
+  default = env("LOCATION")
+}
+
+variable "managed_image_resource_group_name" {
+  type    = string
+  default = env("MANAGED_RESOURCE_GROUP_NAME")
+}
+
 variable "os_name" {
   type    = string
   default = env("OS_NAME")
-}
-
-variable "resource_group" {
-  type    = string
-  default = "rg-custom-images"
-}
-
-variable "location" {
-  type    = string
-  default = "eastus"
-}
-
-variable "image_name" {
-  type    = string
-  default = "windows-server-2022-custom"
 }
 
 variable "vm_size" {
@@ -73,9 +78,9 @@ source "azure-arm" "windows_server" {
   client_secret                     = var.azure_client_secret
   tenant_id                         = var.azure_tenant_id
 
-  build_resource_group_name         = "packer-images-rg"
-  managed_image_resource_group_name = var.resource_group
-  managed_image_name                = "${var.os_name}-${formatdate("YYYY-MM-DD-hhmm", timestamp())}"
+  build_resource_group_name         = var.build_resource_group_name
+  managed_image_resource_group_name = var.managed_image_resource_group_name
+  managed_image_name                = var.image_name
   
   os_type                           = "Windows"
   image_publisher                   = "MicrosoftWindowsServer"

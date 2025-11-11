@@ -2,6 +2,7 @@ pipeline {
     agent none
     
     environment {
+        DATESTAMP = new Date().format('yyyyMMdd_HHmmss')
         RANDOM_ID = "${UUID.randomUUID().toString().take(8)}"
         AZURE_SUBSCRIPTION_ID = credentials('azure-subscription-id')
         AZURE_CLIENT_ID = credentials('azure-client-id')
@@ -94,9 +95,8 @@ pipeline {
                         # Pass only Packer template variables
                         packer init packer/windows-server.pkr.hcl
                         packer validate \
-                            -var="resource_group=${RESOURCE_GROUP}" \
-                            -var="location=${LOCATION}" \
-                            -var="image_name=${OS_NAME}-100000" \
+                            -var="image_name=${OS_NAME}-${DATESTAMP}" \
+                            -var-file="packer/config/azure.pkrvars.hcl" \
                             -var-file="packer/config/${OS_NAME}.pkrvars.hcl" \
                             packer/windows-server.pkr.hcl
                     '''
@@ -121,9 +121,8 @@ pipeline {
 
                         packer init packer/windows-server.pkr.hcl
                         packer build \
-                            -var="resource_group=${RESOURCE_GROUP}" \
-                            -var="location=${LOCATION}" \
-                            -var="image_name=${OS_NAME}-100000" \
+                            -var="image_name=${OS_NAME}-${DATESTAMP}" \
+                            -var-file="packer/config/azure.pkrvars.hcl" \
                             -var-file="packer/config/${OS_NAME}.pkrvars.hcl" \
                             packer/windows-server.pkr.hcl
                     '''
