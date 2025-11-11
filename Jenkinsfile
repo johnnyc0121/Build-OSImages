@@ -52,12 +52,8 @@ pipeline {
 
         stage('Verify GitHub Checkout') {
             agent {
-                docker {
-                    image 'jenkins-agent:20251110'
-                    args "--network host -v /host/workspaces/osimages-${env.RANDOM_ID}:/var/jenkins_home/workspace/osimages-${env.RANDOM_ID}"
-                    customWorkspace "/var/jenkins_home/workspace/osimages-${env.RANDOM_ID}"
-                }
-            }
+                label 'jenkins-agent'
+            } // agent
             steps {
                 echo "Checked out code from ${env.GIT_REPO} on branch ${env.GIT_BRANCH}"
                 sh '''
@@ -81,12 +77,8 @@ pipeline {
         
         stage('Validate Packer Template') {
             agent {
-                docker {
-                    image 'jenkins-agent:20251110'
-                    args "--network host -v /host/workspaces/osimages-${env.RANDOM_ID}:/var/jenkins_home/workspace/osimages-${env.RANDOM_ID}"
-                    customWorkspace "/var/jenkins_home/workspace/osimages-${env.RANDOM_ID}"
-                }
-            }
+                label 'jenkins-agent'
+            } // agent
             steps {
                 script {
                     echo 'Validating Packer template...'
@@ -111,12 +103,8 @@ pipeline {
         
         stage('Build Azure Image') {
             agent {
-                docker {
-                    image 'jenkins-agent:20251110'
-                    args "--network host -v /host/workspaces/osimages-${env.RANDOM_ID}:/var/jenkins_home/workspace/osimages-${env.RANDOM_ID}"
-                    customWorkspace "/var/jenkins_home/workspace/osimages-${env.RANDOM_ID}"
-                }
-            }
+                label 'jenkins-agent'
+            } // agent
             steps {
                 script {
                     echo 'Building custom Windows Server image in Azure...'
