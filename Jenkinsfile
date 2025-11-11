@@ -129,30 +129,6 @@ pipeline {
                 }
             }
         }
-        
-        stage('Tag Image') {
-            agent {
-                label 'jenkins-agent'
-            } // agent
-            steps {
-                script {
-                    echo 'Tagging image in Azure...'
-                    sh '''
-                        # Get the latest image name
-                        IMAGE_FULL_NAME=$(docker run --rm \
-                            -e AZURE_SUBSCRIPTION_ID=${AZURE_SUBSCRIPTION_ID} \
-                            -e AZURE_CLIENT_ID=${AZURE_CLIENT_ID} \
-                            -e AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET} \
-                            -e AZURE_TENANT_ID=${AZURE_TENANT_ID} \
-                            ${PACKER_IMAGE} \
-                            /bin/sh -c "az login --service-principal -u ${AZURE_CLIENT_ID} -p ${AZURE_CLIENT_SECRET} --tenant ${AZURE_TENANT_ID} && \
-                            az image list --resource-group ${RESOURCE_GROUP} --query '[0].name' -o tsv")
-                        
-                        echo "Created image: ${IMAGE_FULL_NAME}"
-                    '''
-                }
-            }
-        }
     }
     post {
         always {
