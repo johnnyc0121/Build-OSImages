@@ -11,6 +11,11 @@ Code to build Custom Windows Server Images in Azure
 
 ### Infrastructure Setup
 
+#### Prepare Windows VM
+- Create an Windows VM in Azure subscription
+- Give it a public IP so that it's accessible (or use a bastion host)
+- Install SSH client tool so that the Ubuntu VM can be accessed
+
 #### Prepare Ubuntu VM
 - Create an Ubuntu VM in Azure subscription
 - Execute below commands to update system and set up Docker
