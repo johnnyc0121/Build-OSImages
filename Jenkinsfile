@@ -153,21 +153,19 @@ pipeline {
         }
     }
     post {
-        success {
-            node('jenkins-agent') {
-                echo 'Pipeline completed successfully! Custom Windows Server image has been created in Azure.'
-            }
-        }
-        failure {
-            node('jenkins-agent') {
-                echo 'Pipeline failed. Check logs for details.'
-            }
-        }
         always {
             node('jenkins-agent') {
+                echo 'Pipeline completed (success or failure)'
                 cleanWs()
+
+                script {
+                    if (currentBuild.currentResult == 'SUCCESS') {
+                        echo '✅ Pipeline completed successfully!'
+                    } else {
+                        echo '❌ Pipeline failed.'
+                    }
+                }
             }
         }
-    }
-
+    } // post
 }
