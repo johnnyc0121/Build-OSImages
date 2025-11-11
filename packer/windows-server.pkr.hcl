@@ -32,6 +32,21 @@ variable "azure_tenant_id" {
   default = env("AZURE_TENANT_ID")
 }
 
+variable "image_sku" {
+  type    = string
+  default = env("IMAGE_SKU")
+}
+
+variable "image_version" {
+  type    = string
+  default = env("IMAGE_VERSION")
+}
+
+variable "os_name" {
+  type    = string
+  default = env("OS_NAME")
+}
+
 variable "resource_group" {
   type    = string
   default = "rg-custom-images"
@@ -49,7 +64,7 @@ variable "image_name" {
 
 variable "vm_size" {
   type    = string
-  default = "Standard_D4s_v3"
+  default = env("VM_SIZE")
 }
 
 source "azure-arm" "windows_server" {
@@ -60,14 +75,14 @@ source "azure-arm" "windows_server" {
 
   build_resource_group_name         = "packer-images-rg"
   managed_image_resource_group_name = var.resource_group
-  managed_image_name                = "${var.image_name}-${formatdate("YYYY-MM-DD-hhmm", timestamp())}"
+  managed_image_name                = "${var.os_name}-${formatdate("YYYY-MM-DD-hhmm", timestamp())}"
   
   os_type                           = "Windows"
   image_publisher                   = "MicrosoftWindowsServer"
   image_offer                       = "WindowsServer"
-  image_sku                         = "2022-datacenter-azure-edition"
-  image_version                     = "latest"
-  
+  image_sku                         = var.image_sku
+  image_version                     = var.image_version
+
   vm_size                           = var.vm_size
   
   communicator                      = "winrm"

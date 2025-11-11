@@ -14,7 +14,6 @@ pipeline {
     
     parameters {
         choice(name: 'OS_NAME', choices: ['win2025', 'win2022', 'win2019'], description: 'OS Version for the custom image')
-        choice(name: 'VM_SIZE', choices: ['Standard_D2ads_v6', 'Standard_D2as_v6'], description: 'Azure VM size for build')
     }
     
     stages {
@@ -97,8 +96,7 @@ pipeline {
                             -var="resource_group=${RESOURCE_GROUP}" \
                             -var="location=${LOCATION}" \
                             -var="image_name=${OS_NAME}-100000" \
-                            -var="os_name=${OS_NAME}" \
-                            -var="vm_size=${VM_SIZE}" \
+                            -var-file="packer/config/${OS_NAME}.pkrvars.hcl" \
                             packer/windows-server.pkr.hcl
                     '''
 
@@ -124,8 +122,7 @@ pipeline {
                             -var="resource_group=${RESOURCE_GROUP}" \
                             -var="location=${LOCATION}" \
                             -var="image_name=${OS_NAME}-100000" \
-                            -var="os_name=${OS_NAME}" \
-                            -var="vm_size=${VM_SIZE}" \
+                            -var-file="packer/config/${OS_NAME}.pkrvars.hcl" \
                             packer/windows-server.pkr.hcl
                     '''
                 }
