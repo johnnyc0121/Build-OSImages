@@ -92,7 +92,7 @@ pipeline {
                         export AZURE_TENANT_ID="${AZURE_TENANT_ID}"
                         
                         # Pass only Packer template variables
-                        packer init
+                        packer init packer/windows-server.pkr.hcl
                         packer validate \
                             -var="resource_group=${RESOURCE_GROUP}" \
                             -var="location=${LOCATION}" \
@@ -119,7 +119,7 @@ pipeline {
                         export AZURE_CLIENT_SECRET="${AZURE_CLIENT_SECRET}"
                         export AZURE_TENANT_ID="${AZURE_TENANT_ID}"
 
-                        packer init
+                        packer init packer/windows-server.pkr.hcl
                         packer build \
                             -var="resource_group=${RESOURCE_GROUP}" \
                             -var="location=${LOCATION}" \
