@@ -124,17 +124,17 @@ build {
 
   # Apply OS configurations
   provisioner "powershell" {
-    script = "scripts/configure-os.ps1"
+    script = "packer/scripts/configure-os.ps1"
   }
 
   # Install software
   provisioner "powershell" {
-    script = "scripts/install-software.ps1"
+    script = "packer/scripts/install-software.ps1"
   }
   
   # Apply security hardening
   provisioner "powershell" {
-    script = "scripts/security-hardening.ps1"
+    script = "packer/scripts/security-hardening.ps1"
   }
   
   # Generalize the image (sysprep)
