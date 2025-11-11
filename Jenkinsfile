@@ -131,6 +131,9 @@ pipeline {
         }
         
         stage('Tag Image') {
+            agent {
+                label 'jenkins-agent'
+            } // agent
             steps {
                 script {
                     echo 'Tagging image in Azure...'
