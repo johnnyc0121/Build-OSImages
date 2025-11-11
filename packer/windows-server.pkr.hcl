@@ -99,7 +99,7 @@ source "azure-arm" "windows_server" {
 }
 
 build {
-  sources = ["source.azure-arm.windows_2022"]
+  sources = ["source.azure-arm.windows_server"]
   
   # Wait for WinRM to be ready
   provisioner "powershell" {
