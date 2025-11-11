@@ -31,15 +31,22 @@ pipeline {
                 // Clean workspace first
                 deleteDir()
 
+                // Clone the GitHub repository
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: "*/${env.GIT_BRANCH}"]],
+                    userRemoteConfigs: [[
+                        url: "${env.GIT_REPO}",
+                        credentialsId: 'github-creds'
+                    ]]
+                ])
+
+                // Verify workspace contents
                 sh '''
+                    echo "Current workspace:"
                     pwd
                     ls -la
                 '''
-
-                // Clone the GitHub repository
-                git branch: "${env.GIT_BRANCH}", 
-                    url: "${env.GIT_REPO}", 
-                    credentialsId: 'github-creds'
             } // steps
         } // stage
 
