@@ -85,11 +85,15 @@ pipeline {
                     sh '''
                         pwd
                         ls -la
+
+                        # Export Azure credentials as environment variables
+                        export AZURE_SUBSCRIPTION_ID="${AZURE_SUBSCRIPTION_ID}"
+                        export AZURE_CLIENT_ID="${AZURE_CLIENT_ID}"
+                        export AZURE_CLIENT_SECRET="${AZURE_CLIENT_SECRET}"
+                        export AZURE_TENANT_ID="${AZURE_TENANT_ID}"
+                        
+                        # Pass only Packer template variables
                         packer validate \
-                            -var="AZURE_SUBSCRIPTION_ID=${AZURE_SUBSCRIPTION_ID}" \
-                            -var="AZURE_CLIENT_ID=${AZURE_CLIENT_ID}" \
-                            -var="AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET}" \
-                            -var="AZURE_TENANT_ID=${AZURE_TENANT_ID}" \
                             -var="resource_group=${RESOURCE_GROUP}" \
                             -var="location=${LOCATION}" \
                             -var="image_name=${OS_NAME}-100000" \
@@ -97,6 +101,7 @@ pipeline {
                             -var="vm_size=${VM_SIZE}" \
                             packer/windows-server.pkr.hcl
                     '''
+
                 }
             }
         }
@@ -109,11 +114,13 @@ pipeline {
                 script {
                     echo 'Building custom Windows Server image in Azure...'
                     sh '''
+                        # Export Azure credentials as environment variables
+                        export AZURE_SUBSCRIPTION_ID="${AZURE_SUBSCRIPTION_ID}"
+                        export AZURE_CLIENT_ID="${AZURE_CLIENT_ID}"
+                        export AZURE_CLIENT_SECRET="${AZURE_CLIENT_SECRET}"
+                        export AZURE_TENANT_ID="${AZURE_TENANT_ID}"
+
                         packer build \
-                            -var="AZURE_SUBSCRIPTION_ID=${AZURE_SUBSCRIPTION_ID}" \
-                            -var="AZURE_CLIENT_ID=${AZURE_CLIENT_ID}" \
-                            -var="AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET}" \
-                            -var="AZURE_TENANT_ID=${AZURE_TENANT_ID}" \
                             -var="resource_group=${RESOURCE_GROUP}" \
                             -var="location=${LOCATION}" \
                             -var="image_name=${OS_NAME}-100000" \
