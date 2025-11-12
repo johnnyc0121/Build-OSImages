@@ -11,6 +11,13 @@ Code to build Custom Windows Server Images in Azure
 
 ### Infrastructure Setup
 
+#### Set up Azure subscription
+- Create a resource group to use when buliding the images using Packer
+- Create a resource group to store the images once they are created
+- Create a virtual network / subnet to use for the infrastructure and the VMs created when building the images
+- Create a network security group (NSG) to limit the traffic going into the virtual network / subnet
+    - Recommend creating an inbound NSG rule to restrict inbound access to only your external IP address (there are numerous ways to determine your external IP)
+
 #### Prepare Windows VM
 - Create an Windows VM in Azure subscription
 - Give it a public IP so that it's accessible (or use a bastion host)
