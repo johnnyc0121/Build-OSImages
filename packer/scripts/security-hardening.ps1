@@ -1,12 +1,13 @@
 # Apply security hardening configurations
 Write-Host "Applying security hardening..."
 
-# Disable unnecessary services
+# Disable unnecessary services, or for security reasons
 $servicesToDisable = @(
     "RemoteRegistry",
     "SSDPSRV",
     "upnphost",
-    "WMPNetworkSvc"
+    "WMPNetworkSvc",
+    "Spooler"
 )
 
 foreach ($service in $servicesToDisable) {
