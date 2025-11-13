@@ -27,7 +27,7 @@ pipeline {
     stages {
         stage('Checkout from GitHub') {
             agent {
-                label '${AGENT}'
+                label "${AGENT}"
             } // agent
             environment {
                 GIT_REPO = 'https://github.com/johnnyc0121/Build-OSImages.git'
