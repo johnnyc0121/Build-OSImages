@@ -59,7 +59,7 @@ pipeline {
 
         stage('Verify GitHub Checkout') {
             agent {
-                label '${AGENT}'
+                label "${AGENT}"
             } // agent
             steps {
                 echo "Checked out code from ${env.GIT_REPO} on branch ${env.GIT_BRANCH}"
@@ -84,7 +84,7 @@ pipeline {
         
         stage('Validate Packer Template') {
             agent {
-                label '${AGENT}'
+                label "${AGENT}"
             } // agent
             steps {
                 script {
@@ -114,7 +114,7 @@ pipeline {
         
         stage('Build Azure Image') {
             agent {
-                label '${AGENT}'
+                label "${AGENT}"
             } // agent
             steps {
                 script {
