@@ -11,14 +11,15 @@ Code to build Custom Windows Server Images in Azure
 
 ### Infrastructure Setup
 
-#### Set up Azure subscription
+#### Set up Azure subscription - TODO: Create Terraform runbook to create these resources
+- Create a resource group to store the resources for the VMs noted below
 - Create a resource group to use when buliding the images using Packer
 - Create a resource group to store the images once they are created
-- Create a virtual network / subnet to use for the infrastructure and the VMs created when building the images
+- Create a virtual network / subnet to use for the infrastructure and the VMs created when building the images (/24 is sufficient)
 - Create a network security group (NSG) to limit the traffic going into the virtual network / subnet
-    - Recommend creating an inbound NSG rule to restrict inbound access to only your external IP address (there are numerous ways to determine your external IP)
+    - Recommend creating an inbound NSG rule to restrict inbound access to the jump server to only your external IP address (there are numerous ways to determine your external IP)
 
-#### Prepare Windows VM
+#### Prepare Windows (Jump Server)
 - Create an Windows VM in Azure subscription
 - Give it a public IP so that it's accessible (or use a bastion host)
 - Install SSH client tool so that the Ubuntu VM can be accessed
