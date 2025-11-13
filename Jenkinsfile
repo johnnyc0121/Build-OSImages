@@ -1,7 +1,18 @@
+def osConfigs = [
+    win2025: [agent: 'win2025-agent'],
+    win2022: [agent: 'win2022-agent'],
+    win2019: [agent: 'win2019-agent']
+]
+
 pipeline {
     agent none
-    
+
+    parameters {
+        choice(name: 'OS_NAME', choices: ['win2025', 'win2022', 'win2019'], description: 'OS Version for the custom image')
+    }
+
     environment {
+        AGENT = osConfigs[params.OS_NAME]?.agent ?: 'jenkins-agent'
         DATESTAMP = new Date().format('yyyyMMdd_HHmmss')
         RANDOM_ID = "${UUID.randomUUID().toString().take(8)}"
         AZURE_SUBSCRIPTION_ID = credentials('azure-subscription-id')
@@ -13,14 +24,10 @@ pipeline {
         PACKER_IMAGE = 'custom-packer:latest'
     }
     
-    parameters {
-        choice(name: 'OS_NAME', choices: ['win2025', 'win2022', 'win2019'], description: 'OS Version for the custom image')
-    }
-    
     stages {
         stage('Checkout from GitHub') {
             agent {
-                label 'jenkins-agent'
+                label '${AGENT}'
             } // agent
             environment {
                 GIT_REPO = 'https://github.com/johnnyc0121/Build-OSImages.git'
@@ -52,7 +59,7 @@ pipeline {
 
         stage('Verify GitHub Checkout') {
             agent {
-                label 'jenkins-agent'
+                label '${AGENT}'
             } // agent
             steps {
                 echo "Checked out code from ${env.GIT_REPO} on branch ${env.GIT_BRANCH}"
@@ -77,7 +84,7 @@ pipeline {
         
         stage('Validate Packer Template') {
             agent {
-                label 'jenkins-agent'
+                label '${AGENT}'
             } // agent
             steps {
                 script {
@@ -107,7 +114,7 @@ pipeline {
         
         stage('Build Azure Image') {
             agent {
-                label 'jenkins-agent'
+                label '${AGENT}'
             } // agent
             steps {
                 script {
