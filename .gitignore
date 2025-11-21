@@ -14,3 +14,37 @@ crash.log
 
 # For built boxes
 *.box
+
+# Terraform state files
+*.tfstate
+*.tfstate.*backup
+
+# Terraform cache and downloaded modules/providers
+.terraform/
+
+# Variable definition files (containing sensitive data)
+*.tfvars
+*.tfvars.json
+
+# Terraform plan output files
+*.tfplan
+
+# Crash log files
+crash.log
+crash.*.log
+
+# Override files (if not intended for version control)
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Terraform CLI configuration files
+.terraformrc
+terraform.rc
+
+# Terraform dependency lock file (optional, based on team preference)
+.terraform.lock.hcl
+
+# Operating System specific files
+.DS_Store
