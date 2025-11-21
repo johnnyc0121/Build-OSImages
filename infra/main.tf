@@ -32,32 +32,45 @@ provider "azurerm" {
   subscription_id = var.subscription_id
 }
 
-resource "azurerm_resource_group" "main" {
-   name     = "build-osimages-rg-eastus"
+# Create resource group for infrastructure
+resource "azurerm_resource_group" "infra" {
+   name     = "osimages-infra-rg-eastus"
+   location = "eastus"
+ }
+
+# Create resource group to store the images
+resource "azurerm_resource_group" "store" {
+   name     = "osimages-store-rg-eastus"
+   location = "eastus"
+ }
+
+# Create resource group when building images
+resource "azurerm_resource_group" "build" {
+   name     = "osimages-build-rg-eastus"
    location = "eastus"
  }
 
 # Create a virtual network
-resource "azurerm_virtual_network" "main" {
+resource "azurerm_virtual_network" "infra" {
   name                = "build-osimages-vnet-eastus"
   address_space       = ["10.100.0.0/16"]
-  location            = azurerm_resource_group.main.location
-  resource_group_name = azurerm_resource_group.main.name
+  location            = azurerm_resource_group.infra.location
+  resource_group_name = azurerm_resource_group.infra.name
 }
 
 # Create a subnet
-resource "azurerm_subnet" "main" {
+resource "azurerm_subnet" "infra" {
   name                 = "build-osimages-subnet-eastus"
-  resource_group_name  = azurerm_resource_group.main.name
-  virtual_network_name = azurerm_virtual_network.main.name
+  resource_group_name  = azurerm_resource_group.infra.name
+  virtual_network_name = azurerm_virtual_network.infra.name
   address_prefixes     = ["10.100.0.0/24"]
 }
 
 # Create a network security group
-resource "azurerm_network_security_group" "main" {
+resource "azurerm_network_security_group" "infra" {
   name                = "build-osimages-nsg"
-  location            = azurerm_resource_group.main.location
-  resource_group_name = azurerm_resource_group.main.name
+  location            = azurerm_resource_group.infra.location
+  resource_group_name = azurerm_resource_group.infra.name
 
   security_rule {
     name                       = "AllowRDPInbound"
@@ -91,12 +104,12 @@ resource "azurerm_network_security_group" "main" {
 # Create network interface card (NIC) for OSImages build server
 resource "azurerm_network_interface" "buildserver" {
   name                = "build-osimages-nic-buildserver-eastus"
-  location            = azurerm_resource_group.main.location
-  resource_group_name = azurerm_resource_group.main.name
+  location            = azurerm_resource_group.infra.location
+  resource_group_name = azurerm_resource_group.infra.name
 
   ip_configuration {
     name                          = "buildserver"
-    subnet_id                     = azurerm_subnet.main.id
+    subnet_id                     = azurerm_subnet.infra.id
     private_ip_address_allocation = "Dynamic"
   }
 }
@@ -104,8 +117,8 @@ resource "azurerm_network_interface" "buildserver" {
 # Create a virtual machine for build server
 resource "azurerm_linux_virtual_machine" "buildserver" {
   name                  = "buildserver"
-  resource_group_name   = azurerm_resource_group.main.name
-  location              = azurerm_resource_group.main.location
+  resource_group_name   = azurerm_resource_group.infra.name
+  location              = azurerm_resource_group.infra.location
   size                  = var.vm_size
   admin_username        = var.admin_username
   admin_password        = var.admin_password
@@ -129,12 +142,12 @@ resource "azurerm_linux_virtual_machine" "buildserver" {
 # Create network interface card (NIC) for OSImages jump server
 resource "azurerm_network_interface" "jumpserver" {
   name                = "build-osimages-nic-jumpserver-eastus"
-  location            = azurerm_resource_group.main.location
-  resource_group_name = azurerm_resource_group.main.name
+  location            = azurerm_resource_group.infra.location
+  resource_group_name = azurerm_resource_group.infra.name
 
   ip_configuration {
     name                          = "jumpserver"
-    subnet_id                     = azurerm_subnet.main.id
+    subnet_id                     = azurerm_subnet.infra.id
     private_ip_address_allocation = "Dynamic"
   }
 }
@@ -142,8 +155,8 @@ resource "azurerm_network_interface" "jumpserver" {
 # Create a virtual machine for jump server
 resource "azurerm_windows_virtual_machine" "jumpserver" {
   name                  = "jumpserver"
-  resource_group_name   = azurerm_resource_group.main.name
-  location              = azurerm_resource_group.main.location
+  resource_group_name   = azurerm_resource_group.infra.name
+  location              = azurerm_resource_group.infra.location
   size                  = var.vm_size
   admin_username        = var.admin_username
   admin_password        = var.admin_password
