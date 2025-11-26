@@ -12,7 +12,7 @@ pipeline {
     }
 
     environment {
-        AGENT = "${osConfigs[params.OS_NAME].agent}"
+        AGENT = "jenkins-agent-cloud"
         DATESTAMP = new Date().format('yyyyMMdd_HHmmss')
         RANDOM_ID = "${UUID.randomUUID().toString().take(8)}"
         AZURE_SUBSCRIPTION_ID = credentials('azure-subscription-id')
