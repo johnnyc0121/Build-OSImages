@@ -23,6 +23,10 @@ variable "admin_password" {
   type    = string
 }
 
+variable "source_ip" {
+  type    = string
+}
+
 provider "azurerm" {
   features {
     resource_group {
@@ -80,7 +84,7 @@ resource "azurerm_network_security_group" "infra" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "3389"
-    source_address_prefix      = "0.0.0.0/0"
+    source_address_prefix      = var.source_ip
     destination_address_prefix = "10.100.0.0/24"
   }
 
@@ -92,7 +96,7 @@ resource "azurerm_network_security_group" "infra" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "22"
-    source_address_prefix      = "0.0.0.0/0"
+    source_address_prefix      = var.source_ip
     destination_address_prefix = "10.100.0.0/24"
   }
 
@@ -104,7 +108,7 @@ resource "azurerm_network_security_group" "infra" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "8080"
-    source_address_prefix      = "0.0.0.0/0"
+    source_address_prefix      = var.source_ip
     destination_address_prefix = "10.100.0.0/24"
   }
 
