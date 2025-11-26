@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  jenkins-agent:
+    build: .
+    container_name: jenkins-agent-01
+    restart: unless-stopped
+    
+    environment:
+      # Jenkins master connection details
+      - JENKINS_URL=http://10.121.0.4:8080
+      - JENKINS_AGENT_NAME=docker-agent-01
+      - JENKINS_SECRET=
+      - JENKINS_AGENT_WORKDIR=/home/jenkins/agent
+      
+    volumes:
+      # Mount Docker socket for Docker-in-Docker
+      - /var/run/docker.sock:/var/run/docker.sock
+      # Persistent workspace
+      - jenkins_agent_workspace:/home/jenkins/agent
+      
+    networks:
+      - jenkins-network
+
+volumes:
+  jenkins_agent_workspace:
+    driver: local
+
+networks:
+  jenkins-network:
+    driver: bridge

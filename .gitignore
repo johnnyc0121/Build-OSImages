@@ -1,0 +1,50 @@
+# Cache objects
+packer_cache/
+
+# Crash log
+crash.log
+
+# https://www.packer.io/guides/hcl/variables
+# Exclude all .pkrvars.hcl files, which are likely to contain sensitive data, 
+# such as password, private keys, and other secrets. These should not be part of 
+# version control as they are data points which are potentially sensitive and 
+# subject to change depending on the environment.
+#
+#*.pkrvars.hcl
+
+# For built boxes
+*.box
+
+# Terraform state files
+*.tfstate
+*.tfstate.*backup
+
+# Terraform cache and downloaded modules/providers
+.terraform/
+
+# Variable definition files (containing sensitive data)
+*.tfvars
+*.tfvars.json
+
+# Terraform plan output files
+*.tfplan
+
+# Crash log files
+crash.log
+crash.*.log
+
+# Override files (if not intended for version control)
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Terraform CLI configuration files
+.terraformrc
+terraform.rc
+
+# Terraform dependency lock file (optional, based on team preference)
+.terraform.lock.hcl
+
+# Operating System specific files
+.DS_Store

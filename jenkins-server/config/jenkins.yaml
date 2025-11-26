@@ -1,0 +1,301 @@
+configuration-as-code: {
+  }
+credentials:
+  blueOcean: {
+    }
+  folder: {
+    }
+  providerImpl: {
+    }
+  system:
+    domainCredentials:
+    - credentials:
+      - string:
+          description: "Azure Tenant ID"
+          id: "azure-tenant-id"
+          scope: GLOBAL
+          secret: ""
+      - string:
+          description: "Azure Subscription ID"
+          id: "azure-subscription-id"
+          scope: GLOBAL
+          secret: ""
+      - string:
+          description: "Azure Client ID"
+          id: "azure-client-id"
+          scope: GLOBAL
+          secret: ""
+      - string:
+          description: "Azure Client Secret"
+          id: "azure-client-secret"
+          scope: GLOBAL
+          secret: ""
+      - usernamePassword:
+          description: "GitHub Credentials"
+          id: "github-creds"
+          password: ""
+          scope: GLOBAL
+          username: "username"
+      domain: {
+        }
+  user: {
+    }
+jenkins:
+  clouds:
+  - docker:
+      disabled:
+        disabledByChoice: true
+        enabledByChoice: false
+      dockerApi:
+        connectTimeout: 60
+        dockerHost:
+          uri: "unix:///var/run/docker.sock"
+        readTimeout: 60
+      exposeDockerHost: true
+      name: "jenkins-agent-cloud"
+      templates:
+      - connector: "attach"
+        disabled:
+          disabledByChoice: true
+          enabledByChoice: false
+        dockerTemplateBase:
+          cpuPeriod: 0
+          cpuQuota: 0
+          image: "jenkins-agent:20251110"
+          mounts:
+          - "type=bind,source=/var/run/docker.sock,destination=/var/run/docker.sock"
+          mountsString: "type=bind,source=/var/run/docker.sock,destination=/var/run/docker.sock"
+        labelString: "jenkins-agent-cloud"
+        name: "jenkins-agent"
+        nodeProperties:
+        - envVars:
+            env:
+            - key: "DOCKER_HOST"
+              value: "unix:///var/run/docker.sock"
+        pullTimeout: 300
+        remoteFs: "/home/jenkins/agent"
+        removeVolumes: true
+  crumbIssuer:
+    standard:
+      excludeClientIPFromCrumb: false
+  disableRememberMe: false
+  disabledAdministrativeMonitors:
+  - "jenkins.diagnostics.ControllerExecutorsAgents"
+  labelAtoms:
+  - name: "built-in"
+  - name: "jenkins-agent"
+  - name: "win2019-agent"
+  - name: "win2022-agent"
+  - name: "win2025-agent"
+  log: {
+    }
+  markupFormatter: "plainText"
+  mode: NORMAL
+  nodeMonitors:
+  - "architecture"
+  - "clock"
+  - diskSpace:
+      freeSpaceThreshold: "1GiB"
+      freeSpaceWarningThreshold: "2GiB"
+  - "swapSpace"
+  - tmpSpace:
+      freeSpaceThreshold: "1GiB"
+      freeSpaceWarningThreshold: "2GiB"
+  - "responseTime"
+  nodes:
+  - permanent:
+      labelString: "jenkins-agent"
+      launcher:
+        inbound:
+          workDirSettings:
+            disabled: false
+            failIfWorkDirIsMissing: false
+            internalDir: "remoting"
+      name: "jenkins-agent"
+      numExecutors: 10
+      remoteFS: "/home/jenkins/agent"
+      retentionStrategy: "always"
+  - permanent:
+      labelString: "win2019-agent"
+      launcher:
+        inbound:
+          workDirSettings:
+            disabled: false
+            failIfWorkDirIsMissing: false
+            internalDir: "remoting"
+      name: "win2019-agent"
+      numExecutors: 10
+      remoteFS: "/home/jenkins/agent"
+      retentionStrategy: "always"
+  - permanent:
+      labelString: "win2022-agent"
+      launcher:
+        inbound:
+          workDirSettings:
+            disabled: false
+            failIfWorkDirIsMissing: false
+            internalDir: "remoting"
+      name: "win2022-agent"
+      numExecutors: 10
+      remoteFS: "/home/jenkins/agent"
+      retentionStrategy: "always"
+  - permanent:
+      labelString: "win2025-agent"
+      launcher:
+        inbound:
+          workDirSettings:
+            disabled: false
+            failIfWorkDirIsMissing: false
+            internalDir: "remoting"
+      name: "win2025-agent"
+      numExecutors: 10
+      remoteFS: "/home/jenkins/agent"
+      retentionStrategy: "always"
+  numExecutors: 0
+  primaryView:
+    all:
+      name: "all"
+  projectNamingStrategy: "standard"
+  quietPeriod: 5
+  remotingSecurity:
+    enabled: true
+  scmCheckoutRetryCount: 0
+  slaveAgentPort: 50000
+  updateCenter:
+    sites:
+    - id: "default"
+      url: "https://updates.jenkins.io/update-center.json"
+  views:
+  - all:
+      name: "all"
+  viewsTabBar: "standard"
+globalCredentialsConfiguration:
+  configuration:
+    providerFilter: "none"
+    typeFilter: "none"
+appearance:
+  consoleUrlProvider: {
+    }
+  prism:
+    theme: PRISM
+security:
+  apiToken:
+    creationOfLegacyTokenEnabled: false
+    tokenGenerationOnCreationEnabled: false
+    usageStatisticsEnabled: true
+  apiTokenProperty: {
+    }
+  cps:
+    hideSandbox: false
+  crumb: {
+    }
+  gitHooks:
+    allowedOnAgents: false
+    allowedOnController: false
+  gitHostKeyVerificationConfiguration:
+    sshHostKeyVerificationStrategy: "knownHostsFileVerificationStrategy"
+  prism: {
+    }
+  queueItemAuthenticator: {
+    }
+  sSHD:
+    port: -1
+  scriptApproval:
+    forceSandbox: false
+  updateSiteWarningsConfiguration: {
+    }
+unclassified:
+  administrativeMonitorsConfiguration: {
+    }
+  artifactManager: {
+    }
+  bitbucketEndpointConfiguration:
+    endpoints:
+    - bitbucketCloudEndpoint:
+        enableCache: false
+        repositoriesCacheDuration: 0
+        teamCacheDuration: 0
+        webhook:
+          cloudWebhook:
+            enableHookSignature: false
+            manageHooks: false
+  buildDiscarders:
+    configuredBuildDiscarders:
+    - "jobBuildDiscarder"
+  builtInNode: {
+    }
+  casCGlobalConfig: {
+    }
+  computerRetentionCheckInterval: {
+    }
+  defaultDisplayUrlProvider: {
+    }
+  defaultFolderConfiguration: {
+    }
+  defaultView: {
+    }
+  envVarsFilter: {
+    }
+  fingerprints:
+    fingerprintCleanupDisabled: false
+    storage: "file"
+  gitHubConfiguration:
+    apiRateLimitChecker: ThrottleForNormalize
+  gitHubPluginConfig:
+    hookUrl: "http://10.121.0.4:8080/github-webhook/"
+  globalDefaultFlowDurabilityLevel: {
+    }
+  globalLibraries: {
+    }
+  globalUntrustedLibraries: {
+    }
+  junitTestResultStorage:
+    storage: "file"
+  location:
+    adminAddress: "address not configured yet <nobody@nowhere>"
+  mailer:
+    charset: "UTF-8"
+    useSsl: false
+    useTls: false
+  myView: {
+    }
+  nodeProperties: {
+    }
+  pipeline-model-docker: {
+    }
+  plugin: {
+    }
+  pollSCM:
+    pollingThreadCount: 10
+  projectNamingStrategy: {
+    }
+  proxyConfigurationManager: {
+    }
+  quietPeriod: {
+    }
+  resourceRoot: {
+    }
+  scmGit:
+    addGitTagAction: false
+    allowSecondFetch: false
+    createAccountBasedOnEmail: false
+    disableGitToolChooser: false
+    hideCredentials: false
+    showEntireCommitSummaryInChanges: false
+    useExistingAccountWithSameEmail: false
+  scmRetryCount: {
+    }
+  shell: {
+    }
+  usageStatistics: {
+    }
+  viewsTabBar: {
+    }
+tool:
+  git:
+    installations:
+    - home: "git"
+      name: "Default"
+  mavenGlobalConfig:
+    globalSettingsProvider: "standard"
+    settingsProvider: "standard"
