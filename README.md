@@ -1,5 +1,6 @@
 # Build-OSImages
 Code to build Custom Windows Server Images in Azure
+MIT License
 *** Still In Development ***
 
 ## Requirements

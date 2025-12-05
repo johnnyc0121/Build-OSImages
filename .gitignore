@@ -48,3 +48,10 @@ terraform.rc
 
 # Operating System specific files
 .DS_Store
+
+# Terraform variable and state files that may contain sensitive data
+*.lock.hcl
+*.tfvars.hcl
+*/.terraform/*
+.tfstate*
+*.tfstate*

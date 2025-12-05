@@ -1,5 +1,5 @@
 subscription_id = ""
-vm_size = ""
+vm_size = "Standard_B2s"
 admin_username = ""
 admin_password = ""
 source_ip = ""
