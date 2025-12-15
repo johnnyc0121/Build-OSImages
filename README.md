@@ -1,7 +1,19 @@
 # Build-OSImages
 Code to build Custom Windows Server Images in Azure
-MIT License
+
 *** Still In Development ***
+
+## Why I Built This
+
+I created this project to explore a fully automated workflow for building Windows images using Packer, Terraform, and Jenkins. My goal was to design a lightweight, reproducible pipeline that demonstrates how to:
+
+- Provision temporary build infrastructure in Azure  
+- Download and customize a Windows marketplace image  
+- Apply OS updates during the build process  
+- Install applications using PowerShell  
+- Produce a clean, reusable image suitable for downstream environments  
+
+This project reflects my interest in platform engineering, infrastructure automation, and building scalable, repeatable workflows for OS image creation.
 
 ## Requirements
 - Azure subscription
@@ -61,3 +73,7 @@ apt-get install docker-ce docker-ce-cli containerd.io
 ```
 #### Install/Configure Jenkins
 - jenkins-server subfolder contains config for configuring Jenkins
+
+## Notes
+
+This project is a personal learning and demonstration repository. It is not based on, derived from, or associated with any proprietary systems, code, or intellectual property from any employer. All implementation details, scripts, and workflows were created independently for educational and portfolio purposes.
